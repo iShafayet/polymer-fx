@@ -1,0 +1,76 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<template id="fx-page-behavior-template">
+  <style></style>
+</template>
+
+<script>
+  (_ => {
+    // scope - start
+    let localTemplate = document.currentScript.ownerDocument.querySelector('#fx-page-behavior-template');
+
+    /* @polymerMixin */
+    FxPageManagerBehavior = (SuperClass) => class extends SuperClass {
+
+      static get properties() {
+        return {
+          pageTitleList: {
+            type: Array,
+            value: _ => []
+          },
+        };
+      }
+
+      // ================================== title management =================================
+
+      pushPageTitle(title) {
+        this.unshift('pageTitleList', title);
+      }
+
+      popPageTitle() {
+        this.shift('pageTitleList');
+      }
+
+      replacePageTitle(title) {
+        this.splice('pageTitleList', 0, 1, title);
+        this.forceRefreshModel('pageTitleList', []);
+      }
+
+      $getPageTitle(pageTitleListLength) {
+        return this.pageTitleList[0];
+      }
+
+      // ================================== active page callback management =================================
+
+      _notifyPageSelect(selectedPageElement) {
+        if (this.activePageElement) {
+          if ('onNavigateOut' in this.activePageElement) {
+            this.activePageElement.onNavigateOut();
+          }
+        }
+
+        this.activePageElement = selectedPageElement;
+        if ('onNextNavigation' in this.activePageElement) {
+          this.activePageElement.onNextNavigation();
+        }
+        if ('onNavigateIn' in this.activePageElement) {
+          this.activePageElement.onNavigateIn();
+        }
+      }
+
+      _pageReady(pageElement) {
+        if ('onFirstNavigation' in pageElement) {
+          pageElement.onFirstNavigation();
+        }
+        if ('onNavigateIn' in pageElement) {
+          pageElement.onNavigateIn();
+        }
+      }
+
+    }
+
+    FxPageManagerBehavior.template = localTemplate;
+    // scope - end
+  })();
+
+</script>

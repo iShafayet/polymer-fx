@@ -1,0 +1,75 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<dom-module id="fx-element">
+  <template>
+    <style></style>
+  </template>
+  <script>
+    class FxElement extends Polymer.Element {
+
+      static mixin(...BehaviorList) {
+        let MixedClass = this;
+        for (let Behavior of BehaviorList) {
+          MixedClass = Behavior(MixedClass);
+        }
+        return MixedClass;
+      }
+
+      static getOwnTemplate() {
+        return Polymer.DomModule.import(this.is, 'template');
+      }
+
+      static insertExternalTemplate(externalTemplate, insertionPointQuery) {
+        let ownTemplate = this.getOwnTemplate();
+        let externalContent = document.importNode(externalTemplate.content, true);
+        let insertionPoint = ownTemplate.content.querySelector(insertionPointQuery);
+        ownTemplate.content.insertBefore(externalContent, insertionPoint);
+      }
+
+      static get is() { return 'fx-element'; }
+
+      elemAll(query) {
+        return this.shadowRoot.querySelectorAll(query);
+      }
+
+      elem(query) {
+        return this.shadowRoot.querySelector(query);
+      }
+
+      resetProperties(...propertyList) {
+        for (let name of propertyList) {
+          let type = this.constructor.properties[name].type;
+          let val = this.constructor.properties[name].value();
+          if (type === Array) {
+            this.set(name, []);
+          } else {
+            this.set(name, null);
+          }
+          this.set(name, val);
+        }
+      }
+
+      forceRefreshModel(path, replacementValue = null) {
+        let value = this.get(path);
+        this.set(path, replacementValue);
+        this.set(path, value);
+      }
+
+      log(...args) {
+        let mode = 'development';
+        if ('app' in this && 'mode' in this.app) {
+          mode = this.app.mode;
+        }
+        if ('mode' in this) {
+          mode = this.mode;
+        }
+        if (mode === 'development') {
+          console.log.apply(console, args);
+        }
+      }
+
+    }
+
+    window.customElements.define(FxElement.is, FxElement);
+  </script>
+</dom-module>

@@ -1,0 +1,52 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="fx-element.html">
+
+<dom-module id="fx-page">
+  <template>
+    <style></style>
+  </template>
+  <script>
+    class FxPage extends FxElement {
+
+      static get is() {
+        return 'fx-page';
+      }
+
+      static get properties() {
+        return {
+          app: Object,
+          params: Object,
+        };
+      }
+
+      constructor() {
+        super();
+        this.app = Polymer.dom(this).getOwnerRoot().host;
+      }
+
+      confirmPageReady() {
+        this.app._pageReady(this);
+      }
+
+      onFirstNavigation() {
+        this.log(`${this.constructor.is}: First Navigated In`);
+        var path = this.app.subRoute.path
+        this.params = this.app.getUrlParameters(path);
+      }
+
+      onNextNavigation() {
+        this.log(`${this.constructor.is}: Again Navigated In`);
+        var path = this.app.subRoute.path
+        this.params = this.app.getUrlParameters(path);
+      }
+
+      onNavigateOut() {
+        this.log(`${this.constructor.is}: Navigated Out`);
+      }
+
+    }
+
+    window.customElements.define(FxPage.is, FxPage);
+  </script>
+</dom-module>

@@ -1,0 +1,23 @@
+{
+  "name": "polymer-fx",
+  "description": "an extremely low-footprint, yet full-blown framework based on polymer and webcomponents.",
+  "main": "fx-element.html",
+  "authors": [
+    "Sayem Shafayet <ishafayet@gmail.com> (http://ishafayet.me/)"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "framework",
+    "polymer",
+    "polymerfx",
+    "paper",
+    "iron"
+  ],
+  "homepage": "https://github.com/iShafayet/polymer-fx",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test"
+  ]
+}

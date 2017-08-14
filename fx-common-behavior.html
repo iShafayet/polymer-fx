@@ -1,0 +1,28 @@
+<script>
+  (_ => {
+    // scope - start
+
+    /* @polymerMixin */
+    window.FxCommonBehavior = (SuperClass) => class extends SuperClass {
+
+      $equals(left, right) {
+        return left === right;
+      }
+
+      $isNull(left) {
+        return left === null;
+      }
+
+      $and(left, right) {
+        return (left && right);
+      }
+
+      $or(left, right) {
+        return (left || right);
+      }
+
+    }
+    // scope - end
+  })();
+
+</script>

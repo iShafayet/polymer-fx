@@ -1,0 +1,74 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="fx-element.html">
+
+<dom-module id="fx-view">
+  <template>
+    <style></style>
+  </template>
+  <script>
+    class FxView extends FxElement {
+
+      static get is() {
+        return 'fx-view';
+      }
+
+      static get properties() {
+        return {
+          app: Object,
+          page: Object,
+          isActive: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectOnAttribute: true
+          },
+          _hasEverBeenActivated: {
+            type: Boolean,
+            value: false
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_activationStatusChanged(isActive, page)'
+        ]
+      }
+
+      constructor() {
+        super();
+        this.page = null;
+        this.app = null;
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        this.page = Polymer.dom(this).getOwnerRoot().host;
+      }
+
+      _activationStatusChanged() {
+        if (!this.page) return;
+        if (!this.app) this.app = this.page.app;
+        if (this.isActive) {
+          if (!this._hasEverBeenActivated) {
+            this._hasEverBeenActivated = true;
+            if ('onceOnActivate' in this) {
+              this.onceOnActivate();
+            }
+          }
+          if ('onActivate' in this) {
+            this.onActivate();
+          }
+        } else {
+          if ('onDeactivate' in this) {
+            this.onDeactivate();
+          }
+        }
+      }
+
+    }
+
+    window.customElements.define(FxView.is, FxView);
+  </script>
+</dom-module>

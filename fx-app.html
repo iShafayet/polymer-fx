@@ -1,0 +1,122 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+
+<link rel="import" href="fx-element.html">
+
+<dom-module id="fx-app">
+  <template>
+    <style></style>
+
+    <app-location id="location" route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="[[_rootPattern]]:page" data="{{_routeData}}" tail="{{subRoute}}"></app-route>
+
+  </template>
+  <script>
+    class FxApp extends FxElement {
+
+      // ====================== constructor, properties and observables =============================
+
+      static get is() { return 'fx-app'; }
+
+      static get properties() {
+        return {
+          pageName: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageNameChanged',
+          },
+          _rootPattern: String,
+          _routeData: Object,
+          subRoute: Object,
+          defaultPageName: {
+            type: String,
+            value: 'home'
+          },
+          mode: {
+            type: String,
+            value: 'development'
+          }
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(_routeData.page)',
+        ];
+      }
+
+      constructor() {
+        super();
+        this._rootPattern = (new URL(this.rootPath)).pathname;
+      }
+
+      // ====================== routing and navigation =============================
+
+      _setLocation(url) {
+        this.$['location'].path = url;
+      }
+
+      _routePageChanged(pageName) {
+        if (pageName === undefined) {
+          return;
+        }
+
+        this.pageName = pageName || this.defaultPageName;
+
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageNameChanged(pageName) {
+        throw new Error("This method is supposed to be inherited by sub class.");
+      }
+
+      navigateTo(url, silent = false) {
+        this._setLocation(url);
+      }
+
+      navigateToPreviousUrl(fallbackUrl) {
+        if (window.history.length > 1) {
+          window.history.back();
+        } else {
+          this.navigateTo(fallbackUrl)
+        }
+      }
+
+      // ====================== Utility Methods =============================
+
+      getUrlParameters(hash) {
+        if (hash.length === 0) {
+          return {};
+        }
+        hash = hash.replace('/', '');
+        let partArray = hash.split('/');
+        let params = {};
+        for (let part of Array.from(partArray)) {
+          if (part.indexOf(':') === -1) {
+            this.showAlertMessage('Routing Error', 'Malformatted Url Given')
+            break;
+          }
+          let [left, right] = Array.from(part.split(':'));
+          params[left] = right;
+        }
+        return params;
+      };
+
+      showAlertMessage(...args) {
+        if (args.length === 1) {
+          alert(args[0]);
+        } else if (args.length > 1) {
+          let message = `${args.pop()}: ${args.join('. ')}`
+          alert(message);
+        }
+      }
+
+    }
+
+    window.customElements.define(FxApp.is, FxApp);
+  </script>
+</dom-module>

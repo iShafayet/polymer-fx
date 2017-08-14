@@ -1,0 +1,40 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/baselib/baselib.html">
+<link rel="import" href="../../bower_components/service-tree/service-tree.html">
+<link rel="import" href="../../bower_components/service-tree-http-request-service/service-tree-http-request-service.html">
+
+<script>
+  (_ => {
+    // scope - start
+    let { HttpRequestService, ServiceManager } = window.ServiceTree;
+
+    /* @polymerMixin */
+    FxHttpBehavior = (SuperClass) => class extends SuperClass {
+
+      constructor(...args) {
+        super(...args);
+        this.serviceManager = new ServiceManager();
+        this.jsonPostApiPathPrefix = 'http://localhost:8000';
+      }
+
+      callJsonPostApi(path, data, cbfn) {
+        let url = `${this.jsonPostApiPathPrefix}${path}`
+        let service = new HttpRequestService('POST', url, { responseType: 'json' });
+        service.on('end', (event) => {
+          if (event.detail.resolution === 'success') {
+            cbfn(null, event.detail.body);
+          } else {
+            cbfn(event.detail);
+          }
+        });
+        baselib.setImmediate(_ => service.request('json', data));
+        this.serviceManager.manage(service);
+        return service;
+      }
+
+    }
+    // scope - end
+  })();
+
+</script>

@@ -1,0 +1,192 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
+
+<link rel="import" href="../../bower_components/baselib/baselib.html">
+
+<template id="fx-dialog-behavior-template">
+  <style>
+    #generic-modal-input {
+      width: 620px;
+    }
+
+    #generic-modal-input paper-input {
+      margin-left: 24px;
+      margin-right: 24px;
+    }
+
+    .dialog-text {
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+  </style>
+
+  <paper-dialog id="generic-modal-input" modal style="z-index: -999999">
+    <h2>[[genericModalInput.title]]</h2>
+    <paper-dialog-scrollable>
+      [[genericModalInput.label]]
+      <paper-input value="{{genericModalInput.input}}"></paper-input>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+      <paper-button dialog-dismiss on-click="genericModalInputCancelPressed">Cancel</paper-button>
+      <paper-button dialog-confirm on-click="genericModalInputDonePressed" autofocus>Done</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-dialog id="generic-modal-dialog" modal style="z-index: -999999">
+    <h2>[[genericModalDialog.title]]</h2>
+    <paper-dialog-scrollable>
+      <div class="dialog-text">[[genericModalDialog.label]]</div>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+      <paper-button dialog-confirm on-click="genericModalDialogGotItPressed" autofocus>Got It</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-dialog id="generic-modal-confirmation" modal style="z-index: -999999">
+    <h2>[[genericModalConfirmation.title]]</h2>
+    <paper-dialog-scrollable>
+      <div class="dialog-text">[[genericModalConfirmation.label]]</div>
+    </paper-dialog-scrollable>
+    <div class="buttons">
+      <paper-button dialog-dismiss on-click="genericModalConfirmationCancelPressed">Cancel</paper-button>
+      <paper-button dialog-confirm on-click="genericModalConfirmationOkayPressed" autofocus>Okay</paper-button>
+    </div>
+  </paper-dialog>
+
+  <paper-toast id="plain-toast" text="Hello world!"></paper-toast>
+
+</template>
+
+<script>
+  (_ => {
+    // scope - start
+    let localTemplate = document.currentScript.ownerDocument.querySelector('#fx-dialog-behavior-template');
+
+    /* @polymerMixin */
+    FxDialogBehavior = (SuperClass) => class extends SuperClass {
+
+      static get properties() {
+        return {
+          genericModalInput: {
+            type: Object,
+            value: function () {
+              return {
+                title: '',
+                label: '',
+                input: '',
+                cbfn: null
+              };
+            }
+          },
+          genericModalDialog: {
+            type: Object,
+            value: function () {
+              return {
+                title: '',
+                label: '',
+                cbfn: null
+              };
+            }
+          },
+          genericModalConfirmation: {
+            type: Object,
+            value: function () {
+              return {
+                title: '',
+                label: '',
+                cbfn: null
+              };
+            }
+          }
+        };
+      }
+
+      constructor() {
+        super();
+      }
+
+      _patchForPolymerModalDialogIssue() {
+        const root = Polymer.dom(this.root);
+        const first = root.firstChild;
+        Array.from(root.querySelectorAll('paper-dialog'))
+          .reverse()
+          .forEach(dialog => root.insertBefore(dialog, first));
+      }
+
+      showModalInput(title, label, defaultInput, cbfn) {
+        this.set('genericModalInput.title', title);
+        this.set('genericModalInput.label', label);
+        this.set('genericModalInput.input', defaultInput);
+        this.set('genericModalInput.cbfn', cbfn);
+        this.$['generic-modal-input'].open();
+        this._patchForPolymerModalDialogIssue();
+
+      }
+
+      genericModalInputCancelPressed(e) {
+        baselib.delay(600, () => {
+          if (this.genericModalInput.cbfn) {
+            this.genericModalInput.cbfn(null);
+          }
+        });
+      }
+
+      genericModalInputDonePressed(e) {
+        baselib.delay(600, () => {
+          if (this.genericModalInput.cbfn) {
+            this.genericModalInput.cbfn(this.genericModalInput.input);
+          }
+        });
+      }
+
+      showModalDialog(title, label, cbfn) {
+        this.set('genericModalDialog.title', title);
+        this.set('genericModalDialog.label', label);
+        this.set('genericModalDialog.cbfn', cbfn);
+        this.$['generic-modal-dialog'].open()
+        this._patchForPolymerModalDialogIssue();
+      }
+
+      genericModalDialogGotItPressed(e) {
+        if (this.genericModalDialog.cbfn) {
+          this.genericModalDialog.cbfn();
+        }
+      }
+
+      showModalConfirmation(title, label, cbfn) {
+        this.set('genericModalConfirmation.title', title);
+        this.set('genericModalConfirmation.label', label);
+        this.set('genericModalConfirmation.cbfn', cbfn);
+        this.$['generic-modal-confirmation'].open()
+        this._patchForPolymerModalDialogIssue();
+      }
+
+      genericModalConfirmationOkayPressed(e) {
+        if (this.genericModalConfirmation.cbfn) {
+          this.genericModalConfirmation.cbfn(true);
+        }
+      }
+
+      genericModalConfirmationCancelPressed(e) {
+        if (this.genericModalConfirmation.cbfn) {
+          this.genericModalConfirmation.cbfn(false);
+        }
+      }
+
+      showPlainToast(message) {
+        let el = this.$['plain-toast'];
+        el.text = message;
+        el.show();
+      }
+
+    }
+
+    FxDialogBehavior.template = localTemplate;
+    // scope - end
+  })();
+
+</script>
