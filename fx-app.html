@@ -8,10 +8,6 @@
 <dom-module id="fx-app">
   <template>
     <style></style>
-
-    <app-location id="location" route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="[[_rootPattern]]:page" data="{{_routeData}}" tail="{{subRoute}}"></app-route>
-
   </template>
   <script>
     class FxApp extends FxElement {
@@ -27,9 +23,6 @@
             reflectToAttribute: true,
             observer: '_pageNameChanged',
           },
-          _rootPattern: String,
-          _routeData: Object,
-          subRoute: Object,
           defaultPageName: {
             type: String,
             value: 'home'
@@ -41,33 +34,59 @@
         };
       }
 
-      static get observers() {
-        return [
-          '_routePageChanged(_routeData.page)',
-        ];
-      }
-
       constructor() {
         super();
-        this._rootPattern = (new URL(this.rootPath)).pathname;
+        window.addEventListener("hashchange", (_ => this._onHashChange()), false)
+        // if (window.location.hash.length < 2){
+        //   window.location.hash = '#/'
+        // }
+        this._onHashChange();
       }
 
       // ====================== routing and navigation =============================
 
+      _onHashChange() {
+        let hash = window.location.hash;
+
+        if (hash.length < 2 || hash.indexOf('#/') !== 0) {
+          window.location.hash = '#/';
+          return;
+        }
+
+        hash = hash.replace('#/', '');
+        let [pageName, ...rest] = hash.split('/')
+        if (!pageName) {
+          pageName = this.defaultPageName;
+        }
+        this.paramString = rest.join('/')
+        baselib.delay(0, _ => {
+          this._routePageChanged(pageName);
+        });
+
+      }
+
       _setLocation(url) {
-        this.$['location'].path = url;
+        window.location.hash = url;
       }
 
       _routePageChanged(pageName) {
         if (pageName === undefined) {
+          if (!window.location.hash) {
+            window.location.hash = '#/home'
+          }
           return;
         }
 
         this.pageName = pageName || this.defaultPageName;
 
-        if (!this.$.drawer.persistent) {
-          this.$.drawer.close();
+        try {
+          if (!this.$.drawer.persistent) {
+            this.$.drawer.close();
+          }
+        } catch (error) {
+          console.error(error);
         }
+
       }
 
       _pageNameChanged(pageName) {

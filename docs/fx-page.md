@@ -44,7 +44,7 @@ This callback is invoked when your page is no longer loaded into view.
 ## params
 `this.app` is initialized in the `super` calls of `onFirstNavigateIn` or `onNextNavigateIn`. It is same as invoking - 
 ```js 
-var path = this.app.subRoute.path
+var path = this.app.paramString
 this.params = this.app.getUrlParameters(path);
 ```
 # Combined Example

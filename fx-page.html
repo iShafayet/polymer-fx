@@ -31,13 +31,13 @@
 
       onFirstNavigation() {
         this.log(`${this.constructor.is}: First Navigated In`);
-        var path = this.app.subRoute.path
+        var path = this.app.paramString;
         this.params = this.app.getUrlParameters(path);
       }
 
       onNextNavigation() {
         this.log(`${this.constructor.is}: Again Navigated In`);
-        var path = this.app.subRoute.path
+        var path = this.app.paramString;
         this.params = this.app.getUrlParameters(path);
       }
 
