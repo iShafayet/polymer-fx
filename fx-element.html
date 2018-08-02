@@ -68,6 +68,10 @@
         }
       }
 
+      delay(timeout, fn) {
+        window.setTimeout(fn, timeout);
+      }
+
     }
 
     window.customElements.define(FxElement.is, FxElement);
