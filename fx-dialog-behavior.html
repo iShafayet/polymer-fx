@@ -27,8 +27,8 @@
   <paper-dialog id="generic-modal-input" modal style="z-index: -999999">
     <h2>[[genericModalInput.title]]</h2>
     <paper-dialog-scrollable>
-      [[genericModalInput.label]]
-      <paper-input value="{{genericModalInput.input}}"></paper-input>
+      <div class="dialog-text">[[genericModalInput.label]]</div>
+      <paper-input value="{{genericModalInput.input}}" on-keypress="genericModalInputKeypressed"></paper-input>
     </paper-dialog-scrollable>
     <div class="buttons">
       <paper-button dialog-dismiss on-click="genericModalInputCancelPressed">Cancel</paper-button>
@@ -141,6 +141,13 @@
             this.genericModalInput.cbfn(this.genericModalInput.input);
           }
         });
+      }
+
+      genericModalInputKeypressed(e) {
+        if (e.which === 13) {
+          this.$['generic-modal-input'].close();
+          this.genericModalInputDonePressed();
+        }
       }
 
       showModalDialog(title, label, cbfn) {
