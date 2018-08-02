@@ -39,7 +39,8 @@
       resetProperties(...propertyList) {
         for (let name of propertyList) {
           let type = this.constructor.properties[name].type;
-          let val = this.constructor.properties[name].value();
+          let val = this.constructor.properties[name].value;
+          if (typeof (val) === 'function') val = val();
           if (type === Array) {
             this.set(name, []);
           } else {
