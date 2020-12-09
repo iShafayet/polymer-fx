@@ -1,6 +1,6 @@
 
 # `mixin FxDialogBehavior`
-`FxDialogBehavior` is a mixin. It adds 4 kind of ui elements and their methods to your app.
+`FxDialogBehavior` is a mixin. It adds 4 kinds of UI elements and their methods to your app.
 
 **Example:** 
 

@@ -36,10 +36,7 @@
 
       constructor() {
         super();
-        window.addEventListener("hashchange", (_ => this._onHashChange()), false)
-        // if (window.location.hash.length < 2){
-        //   window.location.hash = '#/'
-        // }
+        window.addEventListener("hashchange", (_ => this._onHashChange()), false);
         this._onHashChange();
       }
 
@@ -58,11 +55,11 @@
         if (!pageName) {
           pageName = this.defaultPageName;
         }
-        this.paramString = rest.join('/')
+
+        this.paramString = rest.join('/');
         baselib.delay(0, _ => {
           this._routePageChanged(pageName);
         });
-
       }
 
       _setLocation(url) {
@@ -72,7 +69,7 @@
       _routePageChanged(pageName) {
         if (pageName === undefined) {
           if (!window.location.hash) {
-            window.location.hash = '#/home'
+            window.location.hash = '#/' + this.defaultPageName;
           }
           return;
         }
@@ -86,14 +83,13 @@
         } catch (error) {
           console.error(error);
         }
-
       }
 
       _pageNameChanged(pageName) {
-        throw new Error("This method is supposed to be inherited by sub class.");
+        throw new Error("This method is supposed to be overriden by subclass.");
       }
 
-      navigateTo(url, silent = false) {
+      navigateTo(url) {
         this._setLocation(url);
       }
 
@@ -101,7 +97,7 @@
         if (window.history.length > 1) {
           window.history.back();
         } else {
-          this.navigateTo(fallbackUrl)
+          this.navigateTo(fallbackUrl);
         }
       }
 
@@ -111,7 +107,7 @@
         if (hash.length === 0) {
           return {};
         }
-        // hash = hash.replace('/', '');
+
         let partArray = hash.split('/');
         let params = {};
         for (let part of Array.from(partArray)) {

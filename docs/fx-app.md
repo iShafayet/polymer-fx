@@ -46,8 +46,8 @@ class MyApp extends FxApp {
 }
 ```
 
-## navigateTo(path)
-Go to a certain url. Similar to `window.location = path` but handles a few checks internally. You're advised to use it. Note that it is relative unless you specify protocol.
+## navigateTo(url)
+Go to a certain url. Similar to `window.location = url` but handles a few checks internally. You're advised to use it. Note that it is relative unless you specify protocol.
 
 **Example:** 
 
