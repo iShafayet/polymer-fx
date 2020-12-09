@@ -1,6 +1,6 @@
 {
     "name": "polymer-fx",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "an extremely low-footprint, yet full-blown framework based on polymer and webcomponents.",
     "main": "index-runner.js",
     "repository": {
