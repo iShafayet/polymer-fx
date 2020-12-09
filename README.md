@@ -2,7 +2,7 @@
 
 **PolymerFx** is an extremely low-footprint framework based on polymer 2.x and webcomponents. Polymer already has most of the
 characteristics of a modern web application framework. However, in order to make a full featured web app that does more than offline
-interactions, a well defined structure is needed. **PolymerFx** is built to provide that.
+interactions, a well defined structure is crucial. **PolymerFx** is built to provide that.
 
 **PolymerFx** Gives you routing, navigation, page-switching, dialog, toasts, service/provider pattern, http rquests and many commonly used computed functions.
 
