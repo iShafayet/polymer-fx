@@ -32,9 +32,9 @@ bower install polymer-fx --save
 * Custom templates in mixins
 * Utility method (i.e. forced re-evaluation)
 
-## Status of the project.
+## Status of the project
 
-The library is in used by internal projects for [Lipi for Business](lipi.live). 
+The library is in use by internal projects for [Lipi for Business](lipi.live). 
 
 However, since Polymer 3.x took a divergent path from Polymer 2.x, pursuing this project further has no merit. If you are still interested, the [Unfinished docs](docs) are a good place to start.
 
